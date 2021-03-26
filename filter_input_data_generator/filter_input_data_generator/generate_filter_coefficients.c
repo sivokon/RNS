@@ -1,5 +1,4 @@
 #include "rns.h"
-#define _USE_MATH_DEFINES
 #include <stdio.h>
 
 int32_t* read_file(char* file_name, int32_t* count)
