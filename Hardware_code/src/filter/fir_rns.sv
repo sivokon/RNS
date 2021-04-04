@@ -1,7 +1,6 @@
 `include "common.sv"
 
 module fir_rns #(n=100,signalLength=1000) (clk, reset, addr, x_rns, operation, y_rns, done);
-
   input             clk;
   input             reset;
   input      [31:0] addr;
@@ -9,6 +8,7 @@ module fir_rns #(n=100,signalLength=1000) (clk, reset, addr, x_rns, operation, y
   input      [1:0]  operation;
   output reg [31:0] y_rns;
   output reg        done;
+  
   logic      [31:0] coefsLut_rns [n-1:0];
   reg        [31:0] inputs  [signalLength-1+n-1:0];
   reg        [31:0] outputs [signalLength-1:0];
@@ -17,11 +17,11 @@ module fir_rns #(n=100,signalLength=1000) (clk, reset, addr, x_rns, operation, y
   reg        [31:0] acc;
   
   function [31:0] add_rns (input  [31:0]  x1, x2);
-    return {8'((x1[31:24] + x2[31:24]) % 251),8'((x1[23:16] + x2[23:16]) % 241),8'((x1[15:8] + x2[15:8]) % 239),8'((x1[7:0] + x2[7:0]) % 233)};
+    return {8'((x1[31:24] + x2[31:24]) % `B3),8'((x1[23:16] + x2[23:16]) % `B2),8'((x1[15:8] + x2[15:8]) % `B1),8'((x1[7:0] + x2[7:0]) % `B0)};
   endfunction
   
   function [31:0] mul_rns (input  [31:0]  x1, x2);
-    return {8'((x1[31:24] * x2[31:24]) % 251),8'((x1[23:16] * x2[23:16]) % 241),8'((x1[15:8] * x2[15:8]) % 239),8'((x1[7:0] * x2[7:0]) % 233)};
+    return {8'((x1[31:24] * x2[31:24]) % `B3),8'((x1[23:16] * x2[23:16]) % `B2),8'((x1[15:8] * x2[15:8]) % `B1),8'((x1[7:0] * x2[7:0]) % `B0)};
   endfunction
   
   initial $readmemb("coefs_rns.txt", coefsLut_rns);

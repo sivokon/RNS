@@ -1,13 +1,14 @@
-module fir_top(clk, reset, regAddr, regData, done);
+`include "common.sv"
 
-  parameter signalCount = 10;
-  parameter coefsCount = 10;
+module fir_top(clk, reset, regAddr, regData, done);
+    input         clk;
+    input         reset;
+    input  [31:0] regAddr;
+    output [31:0] regData;
+    output        done;
     
-  input         clk;
-  input         reset;
-  input  [31:0] regAddr;
-  output [31:0] regData;
-  output        done;
+    parameter signalCount = 10;
+    parameter coefsCount = 10;
   
     reg   [31:0]  signal[0:9];  
     logic [31:0]  x;
@@ -18,31 +19,31 @@ module fir_top(clk, reset, regAddr, regData, done);
     logic [31:0]  x_rns;
     logic [31:0]  y_rns;
 	 
-     assign regData = y;
+    assign regData = y;
      
-     // fir_rns #(coefsCount,signalCount) fir_rns
-     // (
-         // .clk       ( clk      ),
-         // .reset     ( reset    ),
-         // .addr      ( addr     ),
-         // .x_rns     ( x_rns    ),
-         // .operation (operation ),
-         // .y_rns     ( y_rns    ),
-         // .done      ( done     )
-     // );
-	 // convertor_int_to_rns #(233,239,241,251) convertor_int_to_rns(x, x_rns);
-     // convertor_rns_to_int #(233,239,241,251) convertor_rns_to_int(y_rns, y);
+    // fir_rns #(coefsCount,signalCount) fir_rns
+    // (
+        // .clk       ( clk       ),
+        // .reset     ( reset     ),
+        // .operation ( operation ),
+        // .addr      ( addr      ),
+        // .x_rns     ( x_rns     ),
+        // .y_rns     ( y_rns     ),
+        // .done      ( done      )
+    // );
+	// convertor_int_to_rns #(233,239,241,251) convertor_int_to_rns(x, x_rns);
+    // convertor_rns_to_int #(233,239,241,251) convertor_rns_to_int(y_rns, y);
 
-     fir_srg #(coefsCount,signalCount) fir_srg
-     (
-         .clk       ( clk     ),
-         .reset     ( reset   ),
-         .addr      ( addr    ),
-         .x         ( x       ),
-         .operation (operation),
-         .y         ( y       ),
-         .done      ( done    )
-     );
+    fir_srg #(coefsCount,signalCount) fir_srg
+    (
+        .clk       ( clk     ),
+        .reset     ( reset   ),
+        .addr      ( addr    ),
+        .x         ( x       ),
+        .operation (operation),
+        .y         ( y       ),
+        .done      ( done    )
+    );
 	
     initial $readmemb("signal.txt", signal);
         
@@ -69,7 +70,6 @@ module fir_top(clk, reset, regAddr, regData, done);
                 addr <= 0;
             end
             if (reset == 0 && done && operation == 2'b11)
-                //addr <= addr+1;
                 addr <= regAddr;
         end
 endmodule

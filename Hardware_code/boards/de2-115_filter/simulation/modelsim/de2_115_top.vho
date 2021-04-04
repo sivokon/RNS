@@ -16,7 +16,7 @@
 -- PROGRAM "Quartus II 64-Bit"
 -- VERSION "Version 13.1.0 Build 162 10/23/2013 SJ Web Edition"
 
--- DATE "03/22/2021 21:30:22"
+-- DATE "03/27/2021 22:15:30"
 
 -- 
 -- Device: Altera EP4CE115F29C7 Package FBGA780
@@ -1290,13 +1290,13 @@ SIGNAL \fir_top|fir_srg|outputs[5][16]~q\ : std_logic;
 SIGNAL \fir_top|fir_srg|Mux47~1_combout\ : std_logic;
 SIGNAL \fir_top|fir_srg|Mux47~5_combout\ : std_logic;
 SIGNAL \fir_top|fir_srg|Mux47~6_combout\ : std_logic;
+SIGNAL \fir_top|fir_srg|acc\ : std_logic_vector(31 DOWNTO 0);
+SIGNAL \fir_top|fir_srg|j\ : std_logic_vector(31 DOWNTO 0);
+SIGNAL \fir_top|fir_srg|y\ : std_logic_vector(31 DOWNTO 0);
+SIGNAL \fir_top|fir_srg|i\ : std_logic_vector(31 DOWNTO 0);
 SIGNAL \fir_top|x\ : std_logic_vector(31 DOWNTO 0);
 SIGNAL \fir_top|operation\ : std_logic_vector(1 DOWNTO 0);
 SIGNAL \fir_top|addr\ : std_logic_vector(31 DOWNTO 0);
-SIGNAL \fir_top|fir_srg|y\ : std_logic_vector(31 DOWNTO 0);
-SIGNAL \fir_top|fir_srg|acc\ : std_logic_vector(31 DOWNTO 0);
-SIGNAL \fir_top|fir_srg|j\ : std_logic_vector(31 DOWNTO 0);
-SIGNAL \fir_top|fir_srg|i\ : std_logic_vector(31 DOWNTO 0);
 SIGNAL \ALT_INV_KEY[0]~input_o\ : std_logic;
 
 BEGIN
