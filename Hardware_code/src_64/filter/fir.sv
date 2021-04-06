@@ -1,32 +1,32 @@
 `include "common.sv"
 
-module fir_srg #(coefsLength=100,signalLength=1000) (clk, reset, addr, x, operation, y, done);
+module fir_64 #(coefsLength=100,signalLength=1000) (clk, reset, addr, x, operation, y, done);
   input             clk;
   input             reset;
   input      [31:0] addr;
-  input      [31:0] x;
-  input      [1:0]  operation;
-  output reg [31:0] y;
+  input      [63:0] x;
+  input      [ 1:0]  operation;
+  output reg [63:0] y;
   output reg        done;
-  logic      [31:0] coefsLut [coefsLength-1:0];
-  reg        [31:0] inputs  [signalLength-1+coefsLength-1:0];
-  reg        [31:0] outputs [signalLength-1:0];
+  logic      [63:0] coefsLut [coefsLength-1:0];
+  reg        [63:0] inputs  [signalLength-1+coefsLength-1:0];
+  reg        [63:0] outputs [signalLength-1:0];
   reg        [31:0] i; //calulationCounter;
   reg        [31:0] j; //signalCounter;
-  reg        [31:0] acc;
+  reg        [63:0] acc;
   reg        [31:0] phazeCounter;
   
-  reg [31:0] add_x1;
-  reg [31:0] add_x2;
-  reg [31:0] add_z;
+  reg [63:0] add_x1;
+  reg [63:0] add_x2;
+  reg [63:0] add_z;
   add add(add_x1, add_x2, add_z);
 
-  reg [31:0] mul_x1;
-  reg [31:0] mul_x2;
-  reg [31:0] mul_z;
+  reg [63:0] mul_x1;
+  reg [63:0] mul_x2;
+  reg [63:0] mul_z;
   mul mul(mul_x1, mul_x2, mul_z);
 
-  initial $readmemb("outputCoefficients_32.txt", coefsLut);
+  initial $readmemb("outputCoefficients_64.txt", coefsLut);
   
   integer k;
   always @(posedge clk)
@@ -85,9 +85,9 @@ endmodule
 
 
 module add (x1, x2, z);
-  input  [31:0] x1;
-  input  [31:0] x2;
-  output [31:0] z;
+  input  [63:0] x1;
+  input  [63:0] x2;
+  output [63:0] z;
 
   assign z = x1 + x2;
 endmodule
@@ -95,9 +95,9 @@ endmodule
 
 
 module mul (x1, x2, z);
-  input  [31:0] x1;
-  input  [31:0] x2;
-  output [31:0] z;
+  input  [63:0] x1;
+  input  [63:0] x2;
+  output [63:0] z;
 
   assign z = x1 * x2;
 endmodule

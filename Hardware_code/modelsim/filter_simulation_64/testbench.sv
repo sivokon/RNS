@@ -1,7 +1,7 @@
 `timescale 1 ns / 100 ps
 
 `ifndef SIMULATION_CYCLES
-    `define SIMULATION_CYCLES 300
+    `define SIMULATION_CYCLES 1000
 `endif
 
 module testbench(); 
@@ -12,7 +12,7 @@ module testbench();
     wire [ 31:0 ] regData; 
     logic         done; 
     
-    fir_top fir_top (
+    fir_top_64 fir_top_64 (
         .clk     ( clk ),
         .reset   ( reset ),
         .regAddr ( regAddr ),

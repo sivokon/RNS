@@ -1,6 +1,6 @@
 `include "common.sv"
 
-module fir_top(clk, reset, regAddr, regData, done);
+module fir_top_64(clk, reset, regAddr, regData, done);
     input         clk;
     input         reset;
     input  [31:0] regAddr;
@@ -10,18 +10,18 @@ module fir_top(clk, reset, regAddr, regData, done);
     parameter signalCount = 10;
     parameter coefsCount = 10;
   
-    reg   [31:0]  signal[0:9];  
-    logic [31:0]  x;
-    logic [31:0]  y;
+    reg   [63:0]  signal[0:9];  
+    logic [63:0]  x;
+    logic [63:0]  y;
     logic [31:0]  addr;
-    logic [1:0 ]  operation;
+    logic [ 1:0]  operation;
     
-    logic [31:0]  x_rns;
-    logic [31:0]  y_rns;
+    logic [64:0]  x_rns;
+    logic [64:0]  y_rns;
 	 
     assign regData = y;
-     
-    // fir_rns #(coefsCount,signalCount) fir_rns
+
+    // fir_rns_64 #(coefsCount,signalCount) fir_rns_64
     // (
     //     .clk       ( clk       ),
     //     .reset     ( reset     ),
@@ -31,10 +31,10 @@ module fir_top(clk, reset, regAddr, regData, done);
     //     .y_rns     ( y_rns     ),
     //     .done      ( done      )
     // );
-	// convertor_int_to_rns convertor_int_to_rns(x, x_rns);
-    // convertor_rns_to_int convertor_rns_to_int(y_rns, y);
+	// convertor_int_to_rns_64 convertor_int_to_rns_64(x, x_rns);
+    // convertor_rns_to_int_64 convertor_rns_to_int_64(y_rns, y);
 
-    fir_srg #(coefsCount,signalCount) fir_srg
+    fir_64 #(coefsCount,signalCount) fir_64
     (
         .clk       ( clk     ),
         .reset     ( reset   ),
@@ -45,7 +45,7 @@ module fir_top(clk, reset, regAddr, regData, done);
         .done      ( done    )
     );
 	
-    initial $readmemb("outputSignal_32.txt", signal);
+    initial $readmemb("outputSignal_64.txt", signal);
         
     always @(posedge clk)
         begin
