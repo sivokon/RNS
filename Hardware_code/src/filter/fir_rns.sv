@@ -5,7 +5,7 @@ module fir_rns #(n=100,signalLength=1000) (clk, reset, addr, x_rns, operation, y
   input             reset;
   input      [31:0] addr;
   input      [31:0] x_rns;
-  input      [1:0]  operation;
+  input      [ 1:0] operation;
   output reg [31:0] y_rns;
   output reg        done;
   

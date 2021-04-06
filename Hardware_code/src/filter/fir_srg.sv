@@ -1,7 +1,6 @@
 `include "common.sv"
 
 module fir_srg #(coefsLength=100,signalLength=1000) (clk, reset, addr, x, operation, y, done);
-
   input             clk;
   input             reset;
   input      [31:0] addr;
@@ -15,7 +14,18 @@ module fir_srg #(coefsLength=100,signalLength=1000) (clk, reset, addr, x, operat
   reg        [31:0] i; //calulationCounter;
   reg        [31:0] j; //signalCounter;
   reg        [31:0] acc;
+  reg        [31:0] phazeCounter;
   
+  reg [31:0] add_x1;
+  reg [31:0] add_x2;
+  reg [31:0] add_z;
+  add add(add_x1, add_x2, add_z);
+
+  reg [31:0] mul_x1;
+  reg [31:0] mul_x2;
+  reg [31:0] mul_z;
+  mul mul(mul_x1, mul_x2, mul_z);
+
   initial $readmemb("outputCoefficients_32.txt", coefsLut);
   
   integer k;
@@ -26,6 +36,7 @@ module fir_srg #(coefsLength=100,signalLength=1000) (clk, reset, addr, x, operat
         j <= 0;
         acc <= 0;
         done <= 0;
+        phazeCounter <= 0;
         for (k=0; k<signalLength+coefsLength-1; k=k+1)
             inputs[k] <= 0;
         for (k=0; k<signalLength; k=k+1)
@@ -44,8 +55,24 @@ module fir_srg #(coefsLength=100,signalLength=1000) (clk, reset, addr, x, operat
             i <= 0;
         end 
         else begin
-            acc <= acc + inputs[i+j] * coefsLut[coefsLength-i-1];
-            i <= i+1;
+            if (phazeCounter == 0) begin
+                mul_x1 <= coefsLut[coefsLength-i-1];
+                mul_x2 <= inputs[i+j];
+                phazeCounter <= 1;
+            end
+            if (phazeCounter == 1) begin
+                add_x1 <= acc;
+                add_x2 <= mul_z;
+                phazeCounter <= 2;
+            end
+            if (phazeCounter == 2) begin
+                acc <= add_z;
+                phazeCounter <= 3;
+            end
+            if (phazeCounter == 3) begin
+                i <= i + 1;
+                phazeCounter <= 0;
+            end
         end
     end
     
@@ -53,4 +80,24 @@ module fir_srg #(coefsLength=100,signalLength=1000) (clk, reset, addr, x, operat
         y <= outputs[addr];
   end
 
+endmodule
+
+
+
+module add (x1, x2, z);
+  input  [31:0] x1;
+  input  [31:0] x2;
+  output [31:0] z;
+
+  assign z = x1 + x2;
+endmodule
+
+
+
+module mul (x1, x2, z);
+  input  [31:0] x1;
+  input  [31:0] x2;
+  output [31:0] z;
+
+  assign z = x1 * x2;
 endmodule
