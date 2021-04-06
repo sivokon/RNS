@@ -1,21 +1,21 @@
 `include "common.sv"
 
-module convertor_int_to_rns #(parameter b0, parameter b1, parameter b2, parameter b3)
+module convertor_int_to_rns
 (
     input  [31:0]  int_number,
     output [31:0]  rns
 );
 
-assign rns[7:0] = (int_number[31] == 1 ? int_number[31:0] - `INT_RNS_DELTA : int_number[31:0]) % b0;
-assign rns[15:8] = (int_number[31] == 1 ? int_number[31:0] - `INT_RNS_DELTA : int_number[31:0]) % b1;
-assign rns[23:16] = (int_number[31] == 1 ? int_number[31:0] - `INT_RNS_DELTA : int_number[31:0]) % b2;
-assign rns[31:24] = (int_number[31] == 1 ? int_number[31:0] - `INT_RNS_DELTA : int_number[31:0]) % b3;
+assign rns[7:0] =   (int_number[31] == 1 ? int_number[31:0] - `INT_RNS_DELTA : int_number[31:0]) % `B0;
+assign rns[15:8] =  (int_number[31] == 1 ? int_number[31:0] - `INT_RNS_DELTA : int_number[31:0]) % `B1;
+assign rns[23:16] = (int_number[31] == 1 ? int_number[31:0] - `INT_RNS_DELTA : int_number[31:0]) % `B2;
+assign rns[31:24] = (int_number[31] == 1 ? int_number[31:0] - `INT_RNS_DELTA : int_number[31:0]) % `B3;
     
 endmodule
 
 
 
-module convertor_rns_to_int #(parameter a0, parameter a1, parameter a2, parameter a3)
+module convertor_rns_to_int
 (
     input  [31:0]  rns,
     output [31:0]  int_number

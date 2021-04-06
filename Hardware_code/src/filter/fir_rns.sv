@@ -37,6 +37,7 @@ module fir_rns #(n=100,signalLength=1000) (clk, reset, addr, x_rns, operation, y
         j <= 0;
         acc <= 0;
         done <= 0;
+        phazeCounter <= 0;
         for (k=0; k<signalLength+n-1; k=k+1)
             inputs[k] <= 0;
         for (k=0; k<signalLength; k=k+1)
@@ -85,25 +86,25 @@ endmodule
 
 
 module add_rns (x1, x2, z);
-  input [31:0] x1;
-  input [31:0] x2;
+  input  [31:0] x1;
+  input  [31:0] x2;
   output [31:0] z;
 
-  assign z = {8'((x1[31:24] + x2[31:24]) % 251),
-              8'((x1[23:16] + x2[23:16]) % 241),
-              8'((x1[15:8 ] + x2[15:8 ]) % 239),
-              8'((x1[ 7:0 ] + x2[ 7:0 ]) % 233)};
+  assign z = {8'((x1[31:24] + x2[31:24]) % `B3),
+              8'((x1[23:16] + x2[23:16]) % `B2),
+              8'((x1[15:8 ] + x2[15:8 ]) % `B1),
+              8'((x1[ 7:0 ] + x2[ 7:0 ]) % `B0)};
 endmodule
 
 
 
 module mul_rns (x1, x2, z);
-  input [31:0] x1;
-  input [31:0] x2;
+  input  [31:0] x1;
+  input  [31:0] x2;
   output [31:0] z;
 
-  assign z = {8'((x1[31:24] * x2[31:24]) % 251),
-              8'((x1[23:16] * x2[23:16]) % 241),
-              8'((x1[15:8 ] * x2[15:8 ]) % 239),
-              8'((x1[ 7:0 ] * x2[ 7:0 ]) % 233)};
+  assign z = {8'((x1[31:24] * x2[31:24]) % `B3),
+              8'((x1[23:16] * x2[23:16]) % `B2),
+              8'((x1[15:8 ] * x2[15:8 ]) % `B1),
+              8'((x1[ 7:0 ] * x2[ 7:0 ]) % `B0)};
 endmodule
