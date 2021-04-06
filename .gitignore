@@ -1,5 +1,5 @@
 # Own ignore patterns
-simulation_temp/*
+simulation_temp/
 
 # Quartus compilation artifacts
 *.sv.bak 
