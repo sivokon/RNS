@@ -15,14 +15,17 @@ module fir_rns #(n=100,signalLength=1000) (clk, reset, addr, x_rns, operation, y
   reg        [31:0] i; //calulationCounter;
   reg        [31:0] j; //signalCounter;
   reg        [31:0] acc;
+  reg        [31:0] phazeCounter;
   
-  function [31:0] add_rns (input  [31:0]  x1, x2);
-    return {8'((x1[31:24] + x2[31:24]) % `B3),8'((x1[23:16] + x2[23:16]) % `B2),8'((x1[15:8] + x2[15:8]) % `B1),8'((x1[7:0] + x2[7:0]) % `B0)};
-  endfunction
-  
-  function [31:0] mul_rns (input  [31:0]  x1, x2);
-    return {8'((x1[31:24] * x2[31:24]) % `B3),8'((x1[23:16] * x2[23:16]) % `B2),8'((x1[15:8] * x2[15:8]) % `B1),8'((x1[7:0] * x2[7:0]) % `B0)};
-  endfunction
+  reg [31:0] add_x1;
+  reg [31:0] add_x2;
+  reg [31:0] add_z;
+  add_rns add_rns(add_x1, add_x2, add_z);
+
+  reg [31:0] mul_x1;
+  reg [31:0] mul_x2;
+  reg [31:0] mul_z;
+  mul_rns mul_rns(mul_x1, mul_x2, mul_z);
   
   initial $readmemb("outputCoefficients_RNS_32.txt", coefsLut_rns);
   
@@ -52,8 +55,24 @@ module fir_rns #(n=100,signalLength=1000) (clk, reset, addr, x_rns, operation, y
             i <= 0;
         end 
         else begin
-            acc <= add_rns(acc, mul_rns(inputs[i+j], coefsLut_rns[n-i-1]));
-            i <= i+1;
+            if (phazeCounter == 0) begin
+                mul_x1 <= coefsLut_rns[n-i-1];
+                mul_x2 <= inputs[i+j];
+                phazeCounter <= 1;
+            end
+            if (phazeCounter == 1) begin
+                add_x1 <= acc;
+                add_x2 <= mul_z;
+                phazeCounter <= 2;
+            end
+            if (phazeCounter == 2) begin
+                acc <= add_z;
+                phazeCounter <= 3;
+            end
+            if (phazeCounter == 3) begin
+                i <= i + 1;
+                phazeCounter <= 0;
+            end
         end
     end
     
@@ -61,4 +80,30 @@ module fir_rns #(n=100,signalLength=1000) (clk, reset, addr, x_rns, operation, y
         y_rns <= outputs[addr];
   end
 
+endmodule
+
+
+
+module add_rns (x1, x2, z);
+  input [31:0] x1;
+  input [31:0] x2;
+  output [31:0] z;
+
+  assign z = {8'((x1[31:24] + x2[31:24]) % 251),
+              8'((x1[23:16] + x2[23:16]) % 241),
+              8'((x1[15:8 ] + x2[15:8 ]) % 239),
+              8'((x1[ 7:0 ] + x2[ 7:0 ]) % 233)};
+endmodule
+
+
+
+module mul_rns (x1, x2, z);
+  input [31:0] x1;
+  input [31:0] x2;
+  output [31:0] z;
+
+  assign z = {8'((x1[31:24] * x2[31:24]) % 251),
+              8'((x1[23:16] * x2[23:16]) % 241),
+              8'((x1[15:8 ] * x2[15:8 ]) % 239),
+              8'((x1[ 7:0 ] * x2[ 7:0 ]) % 233)};
 endmodule
