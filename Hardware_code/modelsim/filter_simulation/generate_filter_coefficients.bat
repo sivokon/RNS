@@ -1,1 +1,0 @@
-filter_input_data_generator.exe input_coefs.txt coefs.txt coefs_rns.txt
