@@ -23,16 +23,16 @@ module fir_top(clk, reset, regAddr, regData, done);
      
     // fir_rns #(coefsCount,signalCount) fir_rns
     // (
-        // .clk       ( clk       ),
-        // .reset     ( reset     ),
-        // .operation ( operation ),
-        // .addr      ( addr      ),
-        // .x_rns     ( x_rns     ),
-        // .y_rns     ( y_rns     ),
-        // .done      ( done      )
+    //     .clk       ( clk       ),
+    //     .reset     ( reset     ),
+    //     .operation ( operation ),
+    //     .addr      ( addr      ),
+    //     .x_rns     ( x_rns     ),
+    //     .y_rns     ( y_rns     ),
+    //     .done      ( done      )
     // );
-	// convertor_int_to_rns #(233,239,241,251) convertor_int_to_rns(x, x_rns);
-    // convertor_rns_to_int #(233,239,241,251) convertor_rns_to_int(y_rns, y);
+	// convertor_int_to_rns convertor_int_to_rns(x, x_rns);
+    // convertor_rns_to_int convertor_rns_to_int(y_rns, y);
 
     fir_srg #(coefsCount,signalCount) fir_srg
     (
